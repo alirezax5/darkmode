@@ -89,8 +89,10 @@
 
 
     btn.addEventListener('click', function () {
+        let cToggle = toggleColor(colorMode);
+        saveStorage('colorMode', cToggle)
+        colorMode = cToggle
         document.body.classList.toggle("dark");
-        saveStorage('colorMode', toggleColor(colorMode))
     })
 
     window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
