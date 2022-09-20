@@ -1,3 +1,104 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
 
+    <title>Dark mode</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        span:before {
+            font-size: 4rem;
+            content: '\1F5A4';
+        }
+
+        .main {
+            width: 500px;
+            text-align: center;
+        }
+
+        body.dark {
+            background-color: #121212;
+        }
+
+        .dark span:before {
+            font-size: 4rem;
+            content: '\1F90D';
+        }
+
+        .dark p {
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+<div class="main">
+    <span></span>
+    <p>Dark Mode</p>
+    <button id="toggle">toggle</button>
+</div>
+</body>
+<script>
+    let colorMode, systemColorMode;
+    let btn = document.getElementById("toggle");
+
+    function checkSystemColorMode() {
+        return systemColorMode = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+    }
+
+    function checkLocalStorageColorMode() {
+        let mode = getStorage('colorMode');
+        return mode == null ? colorMode = systemColorMode : colorMode = mode;
+    }
+
+    function setBodyClass() {
+        colorMode === 'dark' ? document.body.classList.add("dark") : document.body.classList.remove("dark")
+    }
+
+
+    function toggleColor(color) {
+        return color === 'dark' ? 'light' : 'dark'
+    }
+
+    function saveStorage(item, value) {
+        localStorage.setItem(item, value)
+    }
+
+    function getStorage(item) {
+        return localStorage.getItem(item)
+    }
+
+    function initThemeColorMode() {
+        checkSystemColorMode();
+        checkLocalStorageColorMode()
+        setBodyClass()
+    }
+
+    function changeColor() {
+        if (getStorage('colorMode') == null) {
+            colorMode = checkSystemColorMode()
+            setBodyClass()
+        }
+    }
+
+
+    btn.addEventListener('click', function () {
+        document.body.classList.toggle("dark");
+        saveStorage('colorMode', toggleColor(colorMode))
+    })
+
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
+        checkSystemColorMode()
+        changeColor()
+    });
+
+    initThemeColorMode()
+
+</script>
 </html>
